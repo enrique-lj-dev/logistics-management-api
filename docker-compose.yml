@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: logistics_app
+    volumes:
+      - .:/var/www
+    networks:
+      - logistics
+
+  web:
+    image: nginx:alpine
+    container_name: logistics_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - logistics
+
+  db:
+    image: postgres:16
+    container_name: logistics_db
+    environment:
+      POSTGRES_DB: logistics
+      POSTGRES_USER: logistics
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - logistics
+
+networks:
+  logistics:
+
+volumes:
+  pgdata:
