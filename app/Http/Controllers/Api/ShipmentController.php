@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateShipmentRequest;
+use App\Http\Resources\ShipmentResource;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 
@@ -13,39 +14,21 @@ class ShipmentController extends Controller
     {
         $shipment = Shipment::create($request->validated());
 
-        return response()->json([
-            'data' => $shipment,
-        ], 201);
+        return (new ShipmentResource($shipment))
+            ->response()
+            ->setStatusCode(201);
     }
 
     public function index()
     {
-        $shipments = Shipment::paginate(10);
-
-        return response()->json([
-            'data' => $shipments->items(),
-            'links' => [
-                'first' => $shipments->url(1),
-                'last' => $shipments->url($shipments->lastPage()),
-                'prev' => $shipments->previousPageUrl(),
-                'next' => $shipments->nextPageUrl(),
-            ],
-            'meta' => [
-                'current_page' => $shipments->currentPage(),
-                'from' => $shipments->firstItem(),
-                'last_page' => $shipments->lastPage(),
-                'per_page' => $shipments->perPage(),
-                'to' => $shipments->lastItem(),
-                'total' => $shipments->total(),
-            ],
-        ]);
+        return ShipmentResource::collection(
+            Shipment::paginate(15)
+        );
     }
 
     public function show(Shipment $shipment)
     {
-        return response()->json([
-            'data' => $shipment,
-        ]);
+        return new ShipmentResource($shipment);
     }
 
     public function update(Request $request, Shipment $shipment)
@@ -57,9 +40,7 @@ class ShipmentController extends Controller
             ])
         );
 
-        return response()->json([
-            'data' => $shipment,
-        ]);
+        return new ShipmentResource($shipment);
     }
 
     public function destroy(Shipment $shipment)
