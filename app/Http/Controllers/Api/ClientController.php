@@ -24,4 +24,27 @@ class ClientController extends Controller
             'data' => $client,
         ], 201);
     }
+
+    public function index()
+    {
+        $clients = Client::paginate(15);
+
+        return response()->json([
+            'data' => $clients->items(),
+            'links' => [
+                'first' => $clients->url(1),
+                'last' => $clients->url($clients->lastPage()),
+                'prev' => $clients->previousPageUrl(),
+                'next' => $clients->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $clients->currentPage(),
+                'from' => $clients->firstItem(),
+                'last_page' => $clients->lastPage(),
+                'per_page' => $clients->perPage(),
+                'to' => $clients->lastItem(),
+                'total' => $clients->total(),
+            ],
+        ]);
+    }
 }

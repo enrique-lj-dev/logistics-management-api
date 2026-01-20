@@ -6,5 +6,6 @@ use App\Http\Controllers\Api\ShipmentController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/clients', [ClientController::class, 'store']);
+    Route::get('/clients', [ClientController::class, 'index']);
     Route::post('/shipments', [ShipmentController::class, 'store']);
 });
