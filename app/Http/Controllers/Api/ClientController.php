@@ -54,4 +54,21 @@ class ClientController extends Controller
             'data' => $client,
         ]);
     }
+
+    public function update(Request $request, Client $client)
+    {
+        $validated = $request->validate([
+            'name' => ['sometimes', 'string'],
+            'email' => ['sometimes', 'nullable', 'email'],
+            'phone' => ['sometimes', 'nullable', 'string'],
+            'address' => ['sometimes', 'string'],
+        ]);
+
+        $client->update($validated);
+
+        return response()->json([
+            'data' => $client,
+        ]);
+    }
+
 }
