@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use Illuminate\Http\Request;
+use App\Http\Resources\ClientResource;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 
@@ -14,48 +14,28 @@ class ClientController extends Controller
     {
         $client = Client::create($request->validated());
 
-        return response()->json([
-            'data' => $client,
-        ], 201);
+        return (new ClientResource($client))
+            ->response()
+            ->setStatusCode(201);
     }
 
     public function index()
     {
-        $clients = Client::paginate(15);
-
-        return response()->json([
-            'data' => $clients->items(),
-            'links' => [
-                'first' => $clients->url(1),
-                'last' => $clients->url($clients->lastPage()),
-                'prev' => $clients->previousPageUrl(),
-                'next' => $clients->nextPageUrl(),
-            ],
-            'meta' => [
-                'current_page' => $clients->currentPage(),
-                'from' => $clients->firstItem(),
-                'last_page' => $clients->lastPage(),
-                'per_page' => $clients->perPage(),
-                'to' => $clients->lastItem(),
-                'total' => $clients->total(),
-            ],
-        ]);
+        return ClientResource::collection(
+            Client::paginate(15)
+        );
     }
 
     public function show(Client $client)
     {
-        return response()->json([
-            'data' => $client,
-        ]);
+        return new ClientResource($client);
     }
 
     public function update(UpdateClientRequest $request, Client $client)
     {
         $client->update($request->validated());
 
-        return response()->json([
-            'data' => $client,
-        ]);
+        return new ClientResource($client);
     }
 
     public function destroy(Client $client)
