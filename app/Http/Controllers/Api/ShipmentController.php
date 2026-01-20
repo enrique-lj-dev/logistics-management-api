@@ -39,4 +39,11 @@ class ShipmentController extends Controller
             ],
         ]);
     }
+
+    public function show(Shipment $shipment)
+    {
+        return response()->json([
+            'data' => $shipment,
+        ]);
+    }
 }
