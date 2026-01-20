@@ -47,4 +47,11 @@ class ClientController extends Controller
             ],
         ]);
     }
+
+    public function show(Client $client)
+    {
+        return response()->json([
+            'data' => $client,
+        ]);
+    }
 }
