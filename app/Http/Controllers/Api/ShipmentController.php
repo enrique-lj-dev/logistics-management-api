@@ -16,4 +16,27 @@ class ShipmentController extends Controller
             'data' => $shipment,
         ], 201);
     }
+
+    public function index()
+    {
+        $shipments = Shipment::paginate(10);
+
+        return response()->json([
+            'data' => $shipments->items(),
+            'links' => [
+                'first' => $shipments->url(1),
+                'last' => $shipments->url($shipments->lastPage()),
+                'prev' => $shipments->previousPageUrl(),
+                'next' => $shipments->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $shipments->currentPage(),
+                'from' => $shipments->firstItem(),
+                'last_page' => $shipments->lastPage(),
+                'per_page' => $shipments->perPage(),
+                'to' => $shipments->lastItem(),
+                'total' => $shipments->total(),
+            ],
+        ]);
+    }
 }
