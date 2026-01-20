@@ -61,4 +61,11 @@ class ShipmentController extends Controller
             'data' => $shipment,
         ]);
     }
+
+    public function destroy(Shipment $shipment)
+    {
+        $shipment->delete();
+
+        return response()->noContent();
+    }
 }
