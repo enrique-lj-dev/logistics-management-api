@@ -5,20 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreClientRequest;
+use App\Http\Requests\UpdateClientRequest;
 
 class ClientController extends Controller
 {   
-    public function store(Request $request)
+    public function store(StoreClientRequest $request)
     {
-        $validated = $request->validate([
-            'type' => ['required', 'in:b2b,b2c'],
-            'name' => ['required', 'string'],
-            'email' => ['nullable', 'email'],
-            'phone' => ['nullable', 'string'],
-            'address' => ['required', 'string'],
-        ]);
-
-        $client = Client::create($validated);
+        $client = Client::create($request->validated());
 
         return response()->json([
             'data' => $client,
@@ -55,16 +49,9 @@ class ClientController extends Controller
         ]);
     }
 
-    public function update(Request $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client)
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'string'],
-            'email' => ['sometimes', 'nullable', 'email'],
-            'phone' => ['sometimes', 'nullable', 'string'],
-            'address' => ['sometimes', 'string'],
-        ]);
-
-        $client->update($validated);
+        $client->update($request->validated());
 
         return response()->json([
             'data' => $client,
