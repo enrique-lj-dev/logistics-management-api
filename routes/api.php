@@ -17,4 +17,5 @@ Route::prefix('v1')->group(function () {
     Route::post('/shipments', [ShipmentController::class, 'store']);
     Route::get('/shipments', [ShipmentController::class, 'index']);
     Route::get('/shipments/{shipment}', [ShipmentController::class, 'show']);
+    Route::put('/shipments/{shipment}', [ShipmentController::class, 'update']);
 });

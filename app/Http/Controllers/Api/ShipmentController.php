@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateShipmentRequest;
 use App\Models\Shipment;
+use Illuminate\Http\Request;
 
 class ShipmentController extends Controller
 {
@@ -42,6 +43,20 @@ class ShipmentController extends Controller
 
     public function show(Shipment $shipment)
     {
+        return response()->json([
+            'data' => $shipment,
+        ]);
+    }
+
+    public function update(Request $request, Shipment $shipment)
+    {
+        $shipment->update(
+            $request->only([
+                'origin_address',
+                'destination_address',
+            ])
+        );
+
         return response()->json([
             'data' => $shipment,
         ]);
