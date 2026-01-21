@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateShipmentRequest;
+use App\Http\Requests\StoreShipmentRequest;
+use App\Http\Requests\UpdateShipmentRequest;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Shipment;
-use Illuminate\Http\Request;
 
 class ShipmentController extends Controller
 {
-    public function store(CreateShipmentRequest $request)
+    public function store(StoreShipmentRequest $request)
     {
         $shipment = Shipment::create($request->validated());
 
@@ -31,14 +31,9 @@ class ShipmentController extends Controller
         return new ShipmentResource($shipment);
     }
 
-    public function update(Request $request, Shipment $shipment)
+    public function update(UpdateShipmentRequest $request, Shipment $shipment)
     {
-        $shipment->update(
-            $request->only([
-                'origin_address',
-                'destination_address',
-            ])
-        );
+        $shipment->update($request->validated());
 
         return new ShipmentResource($shipment);
     }

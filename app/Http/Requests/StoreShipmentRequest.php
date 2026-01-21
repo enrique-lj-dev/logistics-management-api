@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateShipmentRequest extends FormRequest
+class StoreShipmentRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return true;
@@ -30,16 +29,14 @@ class CreateShipmentRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'client_id.required' => 'Client is required.',
-            'client_id.exists' => 'Client does not exist.',
-            'origin_address.required' => 'Origin address is required.',
-            'destination_address.required' => 'Destination address is required.',
+            'priority' => [
+                'sometimes',
+                'in:low,normal,high',
+            ],
+            'sla_date' => [
+                'sometimes',
+                'date',
+            ],
         ];
     }
 }
